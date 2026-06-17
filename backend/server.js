@@ -4,16 +4,17 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+require("dotenv").config();
 
-const app = express();  // Starts the server
-app.use(cors());    // allows your React app to communicate with it
-app.use(express.json());    // translates incoming text data into readable JavaScript objects
+const app = express(); // Starts the server
+app.use(cors()); // allows your React app to communicate with it
+app.use(express.json()); // translates incoming text data into readable JavaScript objects
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const uploadDir = path.join(__dirname, "uploads");
-// Checks the upload folder 
+// Checks the upload folder
 if (!fs.existsSync(uploadDir)) {
-    // If folder not exists, instantly create new Upload folder
+  // If folder not exists, instantly create new Upload folder
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
@@ -28,8 +29,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 2 * 1024 * 1024 },    // Limit the upload size upto 2MB
-  fileFilter: (req, file, cb) => {  // Blocks the invalid upload instead of(jpeg|jpg|png|gif)
+  limits: { fileSize: 2 * 1024 * 1024 }, // Limit the upload size upto 2MB
+  fileFilter: (req, file, cb) => {
+    // Blocks the invalid upload instead of(jpeg|jpg|png|gif)
     const validTypes = /jpeg|jpg|png|gif/;
     const ext = validTypes.test(path.extname(file.originalname).toLowerCase());
     const mime = validTypes.test(file.mimetype);
@@ -39,8 +41,10 @@ const upload = multer({
 });
 
 //  MongoDB Database Connection
+const dburi =
+  process.env.MONGO_URI || "mongodb://localhost:27017/employee_management";
 mongoose
-  .connect("mongodb://127.0.0.1:27017/employee_management")
+  .connect(dburi)
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => {
     console.error("MongoDB connection error:", error);
