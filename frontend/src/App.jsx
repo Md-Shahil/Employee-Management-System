@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:5000/api/employees";
-const IMAGE_BASE = "http://localhost:5000/";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/employees`;
+const IMAGE_BASE = `${import.meta.env.VITE_API_URL}/uploads/`;
 
 function App() {
   const [employees, setEmployees] = useState([]);
